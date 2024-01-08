@@ -1,0 +1,136 @@
+- name: Setup
+  hosts: localhost
+  tasks:
+    # Install
+    - name: Check Homebrew
+      ansible.builtin.command: which brew
+      changed_when: homebrew.rc != 0
+      failed_when: false
+      register: homebrew
+    - name: Install Homebrew
+      ansible.builtin.shell: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+      become: true
+      become_user: "{{ ansible_user_id }}"
+      changed_when: true
+      when: homebrew.rc != 0
+
+    - name: Install Homebrew formula
+      community.general.homebrew:
+        name: "{{ item }}"
+      loop:
+        - colima
+        - docker
+        - fish
+        - mise
+        - neovim
+        - tldr
+
+    - name: Install Homebrew cask
+      community.general.homebrew_cask:
+        name: "{{ item }}"
+      loop:
+        # Personal
+        - arc
+        - firefox
+        - raycast
+        - spotify
+        # Work
+        - jetbrains-toolbox
+        - warp
+
+    - name: Install Maven
+      ansible.builtin.command: mise use --global --yes maven
+      register: maven
+      changed_when: "'installed' in maven.stderr"
+    - name: Install Node.js
+      ansible.builtin.command: mise use --global node@20
+      register: node
+      changed_when: "'installed' in node.stderr"
+    - name: Install Yarn
+      ansible.builtin.command: mise exec -- npm install --global yarn
+      register: yarn
+      changed_when: "'changed' not in yarn.stdout"
+
+    - name: Install LazyVim
+      ansible.builtin.git:
+        dest: ~/.config/nvim
+        repo: "https://github.com/LazyVim/starter"
+        version: main
+
+    - name: Check Teleport
+      ansible.builtin.command: which teleport
+      changed_when: teleport.rc != 0
+      failed_when: false
+      register: teleport
+    - name: Fetch Teleport installer
+      ansible.builtin.get_url:
+        dest: /tmp/teleport.pkg
+        mode: u=rw,g=r,o=r
+        url: https://cdn.teleport.dev/teleport-14.3.3.pkg
+      when: teleport.rc != 0
+    - name: Install Teleport
+      ansible.builtin.command: installer -pkg /tmp/teleport.pkg -target /
+      become: true
+      changed_when: true
+      when: teleport.rc != 0
+
+    # Configure
+    - name: Set fish shell
+      become: true
+      ansible.builtin.user:
+        name: "{{ ansible_user_id }}"
+        shell: /opt/homebrew/bin/fish
+    - name: Create fish directory
+      ansible.builtin.file:
+        mode: u=rwx,g=rx,o=rx
+        path: ~/.config/fish
+        state: directory
+
+    - name: Add Homebrew to PATH
+      ansible.builtin.lineinfile:
+        create: true
+        line: eval "$(/opt/homebrew/bin/brew shellenv)"
+        mode: u=rw,g=r,o=r
+        path: ~/.config/fish/config.fish
+
+    - name: Set environment variable
+      ansible.builtin.lineinfile:
+        create: true
+        line: "set --global --export {{ item.name }} {{ item.value }}"
+        mode: u=rw,g=r,o=r
+        path: ~/.config/fish/config.fish
+      loop:
+        - name: DOCKER_HOST
+          value: "unix://$HOME/.colima/default/docker.sock"
+        - name: TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE
+          value: "/var/run/docker.sock"
+        - name: MIRAKL_TENANT
+          value: "bastiensun"
+
+    - name: Configure ~/.gitconfig
+      community.general.git_config:
+        name: "{{ item.name }}"
+        scope: global
+        value: "{{ item.value }}"
+      loop:
+        - name: user.name
+          value: Bastien Sun
+        - name: user.email
+          value: 43788700+bastiensun@users.noreply.github.com
+        - name: core.editor
+          value: nvim
+
+    - name: Create workspace directory
+      ansible.builtin.file:
+        mode: u=rwx,g=rx,o=rx
+        path: ~/workspace
+        state: directory
+
+    - name: Configure Colima
+      ansible.builtin.blockinfile:
+        create: true
+        block: |
+          cpu: 8
+          memory: "8GiB"
+        mode: u=rw,g=r,o=r
+        path: ~/.colima/_templates/default.yml
