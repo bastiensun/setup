@@ -15,20 +15,17 @@ concurrency:
 jobs:
   lint:
     name: Lint
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: ansible/ansible-lint@v24
 
   integration:
     name: Integration
-    runs-on: macos-12
+    runs-on: macos-latest
     steps:
-      # Uninstall runner preinstalled software
-      - run: rm -rf ~/.yarn
-      - run: brew uninstall firefox
-      - run: brew uninstall maven
-      - run: brew uninstall --ignore-dependencies node
+      # Uninstall runner preinstalled software (cf. https://github.com/actions/runner-images?tab=readme-ov-file#software-and-image-support)
+      - run: brew uninstall node@20
       - run: sudo /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/uninstall.sh)"
 
       - uses: actions/checkout@v4
