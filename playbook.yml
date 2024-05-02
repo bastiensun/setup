@@ -37,6 +37,11 @@
       register: node
       changed_when: "'installed' in node.stderr"
 
+    - name: Install pnpm
+      ansible.builtin.command: mise use --global pnpm --yes
+      register: pnpm
+      changed_when: "'installed' in pnpm.stderr"
+
     # Configure
     - name: Set fish shell
       become: true
