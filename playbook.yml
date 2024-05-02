@@ -43,6 +43,13 @@
       changed_when: "'installed' in pnpm.stderr"
 
     # Configure
+    - name: Tap to click
+      community.general.osx_defaults:
+        domain: com.apple.AppleMultitouchTrackpad
+        key: Clicking
+        type: int
+        value: 1
+
     - name: Set fish shell
       become: true
       ansible.builtin.user:
