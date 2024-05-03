@@ -1,24 +1,31 @@
 - name: Setup
   hosts: localhost
   tasks:
-    # Install
-    - name: Check Homebrew
-      ansible.builtin.command: which brew
-      changed_when: homebrew.rc != 0
-      failed_when: false
-      register: homebrew
-    - name: Install Homebrew
-      ansible.builtin.shell: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    - name: Install fish
+      community.general.homebrew:
+        name: fish
+    - name: Set fish shell
       become: true
-      become_user: "{{ ansible_user_id }}"
-      changed_when: true
-      when: homebrew.rc != 0
+      ansible.builtin.user:
+        name: "{{ ansible_user_id }}"
+        shell: /opt/homebrew/bin/fish
+    - name: Create fish directory
+      ansible.builtin.file:
+        mode: u=rwx,g=rx,o=rx
+        path: ~/.config/fish
+        state: directory
+    - name: Add Homebrew to PATH
+      ansible.builtin.lineinfile:
+        create: true
+        line: eval "$(/opt/homebrew/bin/brew shellenv)"
+        mode: u=rw,g=r,o=r
+        path: ~/.config/fish/config.fish
 
+    # Install
     - name: Install Homebrew formula
       community.general.homebrew:
         name: "{{ item }}"
       loop:
-        - fish
         - mise
         - neovim
         - tldr
@@ -30,7 +37,6 @@
         - arc
         - jetbrains-toolbox
         - raycast
-        - warp
 
     - name: Install Node.js
       ansible.builtin.command: mise use --global node@20
@@ -49,24 +55,6 @@
         key: Clicking
         type: int
         value: 1
-
-    - name: Set fish shell
-      become: true
-      ansible.builtin.user:
-        name: "{{ ansible_user_id }}"
-        shell: /opt/homebrew/bin/fish
-    - name: Create fish directory
-      ansible.builtin.file:
-        mode: u=rwx,g=rx,o=rx
-        path: ~/.config/fish
-        state: directory
-
-    - name: Add Homebrew to PATH
-      ansible.builtin.lineinfile:
-        create: true
-        line: eval "$(/opt/homebrew/bin/brew shellenv)"
-        mode: u=rw,g=r,o=r
-        path: ~/.config/fish/config.fish
 
     - name: Configure ~/.gitconfig
       community.general.git_config:

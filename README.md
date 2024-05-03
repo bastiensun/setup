@@ -3,6 +3,7 @@
 ## Installation
 
 ```shell
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 python3 -m venv venv
 source venv/bin/activate
 pip3 install --requirement requirements.txt

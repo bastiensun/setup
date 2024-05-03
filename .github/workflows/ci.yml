@@ -26,7 +26,6 @@ jobs:
     steps:
       # Uninstall runner preinstalled software (cf. https://github.com/actions/runner-images?tab=readme-ov-file#software-and-image-support)
       - run: brew uninstall node@20
-      - run: sudo /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/uninstall.sh)"
 
       - uses: actions/checkout@v4
       - run: pip3 install --requirement requirements.txt
