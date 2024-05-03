@@ -82,6 +82,11 @@
         type: bool
         value: true
 
+    - name: Generate SSH key
+      community.crypto.openssh_keypair:
+        path: ~/.ssh/id_ed25519
+        type: ed25519
+
     - name: Configure ~/.gitconfig
       community.general.git_config:
         name: "{{ item.name }}"
@@ -89,13 +94,15 @@
         value: "{{ item.value }}"
       loop:
         - name: user.name
-          value: Bastien Sun
+          value: "Bastien Sun"
         - name: user.email
-          value: 43788700+bastiensun@users.noreply.github.com
+          value: "43788700+bastiensun@users.noreply.github.com"
         - name: core.editor
-          value: nvim
+          value: "nvim"
 
-    - name: Generate SSH key
-      community.crypto.openssh_keypair:
-        path: ~/.ssh/id_ed25519
-        type: ed25519
+        - name: gpg.format
+          value: "ssh"
+        - name: user.signingkey
+          value: "~/.ssh/id_ed25519.pub"
+        - name: commit.gpgsign
+          value: "true"
