@@ -56,6 +56,32 @@
         type: int
         value: 1
 
+    - name: Automatically hide and show the Dock
+      community.general.osx_defaults:
+        domain: com.apple.dock
+        key: autohide
+        type: bool
+        value: true
+    - name: Show suggested and recent apps in Dock
+      community.general.osx_defaults:
+        domain: com.apple.dock
+        key: show-recents
+        type: bool
+        value: false
+
+    - name: Show all filename extensions
+      community.general.osx_defaults:
+        domain: NSGlobalDomain
+        key: AppleShowAllExtensions
+        type: bool
+        value: true
+    - name: Show path bar
+      community.general.osx_defaults:
+        domain: com.apple.finder
+        key: ShowPathbar
+        type: bool
+        value: true
+
     - name: Configure ~/.gitconfig
       community.general.git_config:
         name: "{{ item.name }}"
