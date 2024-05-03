@@ -36,6 +36,7 @@
       loop:
         - arc
         - jetbrains-toolbox
+        - obsidian
         - raycast
 
     - name: Install Node.js
