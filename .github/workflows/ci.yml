@@ -28,14 +28,28 @@ jobs:
       - run: brew uninstall node@20
 
       - uses: actions/checkout@v4
-      - run: pip3 install --requirement requirements.txt
-      - run: ansible-galaxy install --role-file requirements.yml
-      - run: ansible-playbook --syntax-check playbook.yml
-      - run: ansible-playbook ${RUNNER_DEBUG:+-vvv} playbook.yml
+      - name: Install Ansible
+        run: |
+          python3 -m venv venv
+          source venv/bin/activate
+          pip3 install --requirement requirements.txt
+      - name: Install Ansible collections
+        run: |
+          source venv/bin/activate
+          ansible-galaxy install --role-file requirements.yml
+      - name: Perform a syntax check on the Ansible playbook
+        run: |
+          source venv/bin/activate
+          ansible-playbook --syntax-check playbook.yml
+      - name: Run Ansible playbook
+        run: |
+          source venv/bin/activate
+          ansible-playbook ${RUNNER_DEBUG:+-vvv} playbook.yml
         env:
           ANSIBLE_FORCE_COLOR: true
       - name: Idempotence check
         run: |
+          source venv/bin/activate
           idempotence=$(mktemp)
           ansible-playbook ${RUNNER_DEBUG:+-vvv} playbook.yml | tee -a ${idempotence}
           tail ${idempotence} | grep --quiet 'changed=0.*failed=0' && (echo 'Idempotence test: pass' && exit 0) || (echo 'Idempotence test: fail' && exit 1)
