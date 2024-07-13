@@ -26,6 +26,8 @@
       community.general.homebrew:
         name: "{{ item }}"
       loop:
+        - act
+        - d2
         - mise
         - neovim
         - tldr
@@ -35,6 +37,7 @@
         name: "{{ item }}"
       loop:
         - arc
+        - docker
         - jetbrains-toolbox
         - obsidian
         - raycast
