@@ -86,6 +86,14 @@
         type: bool
         value: true
 
+    - name: Show battery percentage in the menu bar
+      community.general.osx_defaults:
+        domain: com.apple.controlcenter
+        host: currentHost
+        key: BatteryShowPercentage
+        type: bool
+        value: true
+
     - name: Generate SSH key
       community.crypto.openssh_keypair:
         path: ~/.ssh/id_ed25519
