@@ -41,6 +41,8 @@
         - jetbrains-toolbox
         - obsidian
         - raycast
+        - signal
+        - spotify
 
     - name: Install Node.js
       ansible.builtin.command: mise use --global node@20
