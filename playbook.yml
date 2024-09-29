@@ -31,6 +31,7 @@
         - mise
         - neovim
         - tldr
+        - tree
 
     - name: Install Homebrew cask
       community.general.homebrew_cask:
@@ -38,6 +39,7 @@
       loop:
         - arc
         - docker
+        - iterm2
         - jetbrains-toolbox
         - obsidian
         - raycast
@@ -120,3 +122,9 @@
           value: "~/.ssh/id_ed25519.pub"
         - name: commit.gpgsign
           value: "true"
+
+    - name: Configure Neovim
+      ansible.builtin.git:
+        repo: https://github.com/bastiensun/kickstart.nvim.git
+        dest: "~/.config/nvim"
+        version: "HEAD" # noqa: latest
