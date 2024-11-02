@@ -15,9 +15,11 @@
         path: ~/.config/fish
         state: directory
     - name: Add Homebrew to PATH
-      ansible.builtin.lineinfile:
+      ansible.builtin.blockinfile:
+        block: |
+          eval "$(/opt/homebrew/bin/brew shellenv)"
+          starship init fish | source
         create: true
-        line: eval "$(/opt/homebrew/bin/brew shellenv)"
         mode: u=rw,g=r,o=r
         path: ~/.config/fish/config.fish
 
@@ -30,6 +32,7 @@
         - d2
         - mise
         - neovim
+        - starship
         - tldr
         - tree
 
@@ -38,23 +41,16 @@
         name: "{{ item }}"
       loop:
         - arc
+        - discord
         - docker
-        - iterm2
+        - ghostty
         - jetbrains-toolbox
+        - nikitabobko/tap/aerospace
         - obsidian
         - raycast
         - signal
         - spotify
-
-    - name: Install Node.js
-      ansible.builtin.command: mise use --global node@20
-      register: node
-      changed_when: "'installed' in node.stderr"
-
-    - name: Install pnpm
-      ansible.builtin.command: mise use --global pnpm --yes
-      register: pnpm
-      changed_when: "'installed' in pnpm.stderr"
+        - zoom
 
     # Configure
     - name: Tap to click
@@ -128,3 +124,27 @@
         repo: https://github.com/bastiensun/kickstart.nvim.git
         dest: "~/.config/nvim"
         version: "HEAD" # noqa: latest
+
+    - name: Create Ghostty directory
+      ansible.builtin.file:
+        mode: u=rwx,g=rx,o=rx
+        path: ~/.config/ghostty
+        state: directory
+    - name: Configure Ghostty
+      ansible.builtin.blockinfile:
+        block: |
+          theme = dark:catppuccin-mocha,light:catppuccin-latte
+        create: true
+        mode: u=rw,g=r,o=r
+        path: ~/.config/ghostty/config
+
+    - name: Create AeroSpace directory
+      ansible.builtin.file:
+        mode: u=rwx,g=rx,o=rx
+        path: ~/.config/aerospace
+        state: directory
+    - name: Copy AeroSpace config
+      ansible.builtin.copy:
+        dest: ~/.config/aerospace/aerospace.toml
+        mode: u=rw,g=r,o=r
+        src: ./dotfiles/aerospace.toml
