@@ -1,4 +1,8 @@
-# Setup
+# ⚙️ Setup
+
+Ansible playbook to automate the configuration of my Mac.
+
+[![Automation (xkcd)](https://imgs.xkcd.com/comics/automation.png)](https://xkcd.com/1319/)
 
 ## Installation
 
