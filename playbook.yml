@@ -41,6 +41,7 @@
         name: "{{ item }}"
       loop:
         - arc
+        - cursor
         - discord
         - docker
         - ghostty
@@ -148,3 +149,14 @@
         dest: ~/.config/aerospace/aerospace.toml
         mode: u=rw,g=r,o=r
         src: ./dotfiles/aerospace.toml
+
+    - name: Create Cursor directory
+      ansible.builtin.file:
+        mode: u=rwx,g=rx,o=rx
+        path: ~/Library/Application Support/Cursor/User
+        state: directory
+    - name: Copy Cursor config
+      ansible.builtin.copy:
+        dest: ~/Library/Application Support/Cursor/User/settings.json
+        mode: u=rw,g=r,o=r
+        src: ./dotfiles/cursor.json
