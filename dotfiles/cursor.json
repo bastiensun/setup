@@ -2,5 +2,6 @@
   "editor.lineNumbers": "relative",
   "window.autoDetectColorScheme": true,
   "window.commandCenter": true,
-  "workbench.preferredLightColorTheme": "Default Light Modern"
+  "workbench.preferredDarkColorTheme": "Catppuccin Mocha",
+  "workbench.preferredLightColorTheme": "Catppuccin Latte"
 }

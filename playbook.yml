@@ -160,3 +160,15 @@
         dest: ~/Library/Application Support/Cursor/User/settings.json
         mode: u=rw,g=r,o=r
         src: ./dotfiles/cursor.json
+    - name: Install Cursor extensions
+      ansible.builtin.command: cursor --install-extension {{ item }}
+      register: extension
+      changed_when: "'already installed' in extension.stderr"
+      loop:
+        - bradlc.vscode-tailwindcss
+        - Catppuccin.catppuccin-vsc
+        - dbaeumer.vscode-eslint
+        - GitHub.vscode-pull-request-github
+        - Gruntfuggly.todo-tree
+        - usernamehw.errorlens
+        - vscodevim.vim
