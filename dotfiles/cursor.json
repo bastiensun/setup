@@ -1,0 +1,7 @@
+{
+  "editor.lineNumbers": "relative",
+  "window.autoDetectColorScheme": true,
+  "window.commandCenter": true,
+  "workbench.preferredDarkColorTheme": "Catppuccin Mocha",
+  "workbench.preferredLightColorTheme": "Catppuccin Latte"
+}
