@@ -19,6 +19,7 @@
         block: |
           eval "$(/opt/homebrew/bin/brew shellenv)"
           starship init fish | source
+          set --erase fish_greeting
         create: true
         mode: u=rw,g=r,o=r
         path: ~/.config/fish/config.fish
@@ -43,7 +44,7 @@
         - arc
         - cursor
         - discord
-        - docker
+        #- docker
         - ghostty
         - jetbrains-toolbox
         - nikitabobko/tap/aerospace
@@ -95,10 +96,10 @@
         type: bool
         value: true
 
-    - name: Generate SSH key
-      community.crypto.openssh_keypair:
-        path: ~/.ssh/id_ed25519
-        type: ed25519
+#   - name: Generate SSH key
+#     community.crypto.openssh_keypair:
+#       path: ~/.ssh/id_ed25519
+#       type: ed25519
 
     - name: Configure ~/.gitconfig
       community.general.git_config:
@@ -110,6 +111,7 @@
           value: "Bastien Sun"
         - name: user.email
           value: "43788700+bastiensun@users.noreply.github.com"
+
         - name: core.editor
           value: "nvim"
 
@@ -119,6 +121,41 @@
           value: "~/.ssh/id_ed25519.pub"
         - name: commit.gpgsign
           value: "true"
+
+        - name: column.ui
+          value: auto
+        - name: branch.sort
+          value: -committerdate
+
+        - name: tag.sort
+          value: version:refname
+
+        - name: init.defaultBranch
+          value: main
+
+        - name: diff.algorithm
+          value: histogram
+        - name: diff.colorMoved
+          value: plain
+        - name: diff.mnemonicPrefix
+          value: true
+        - name: diff.renames
+          value: true
+
+        - name: push.autoSetupRemote
+          value: true
+        - name: push.followTags
+          value: true
+
+        - name: fetch.prune
+          value: true
+        - name: fetch.pruneTags
+          value: true
+        - name: fetch.all
+          value: true
+
+        - name: core.excludesfile
+          value: ~/.gitignore
 
     - name: Configure Neovim
       ansible.builtin.git:
@@ -168,6 +205,7 @@
         - bradlc.vscode-tailwindcss
         - Catppuccin.catppuccin-vsc
         - dbaeumer.vscode-eslint
+        - eamodio.gitlens
         - GitHub.vscode-pull-request-github
         - Gruntfuggly.todo-tree
         - usernamehw.errorlens
