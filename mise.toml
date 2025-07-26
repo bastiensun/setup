@@ -4,5 +4,8 @@ uv = "0.8.3"
 [tasks.default]
 run = ['uv run ansible-playbook --ask-become-pass playbook.yml']
 
+[tasks.lint]
+run = ['uv run pre-commit run --all-files']
+
 [settings]
 idiomatic_version_file_enable_tools = ["python"]

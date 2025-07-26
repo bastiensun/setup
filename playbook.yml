@@ -40,10 +40,11 @@
       community.general.homebrew_cask:
         name: "{{ item }}"
       loop:
-        - arc
         - discord
         - docker
         - ghostty
+        - gitbutler
+        - homerow
         - jetbrains-toolbox
         - nikitabobko/tap/aerospace
         - obsidian
@@ -52,6 +53,8 @@
         - spotify
         - ubersicht
         - zoom
+
+        # adguard
 
     # Configure
     - name: Tap to click
