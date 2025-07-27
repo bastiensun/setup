@@ -4,13 +4,31 @@
     "theme": "dark",
     "noColorInData": true,
     "disableAnimations": true,
+    "font": "system Font",
     "aerospacePath": "/opt/homebrew/bin/aerospace",
     "windowManager": "aerospace"
   },
   "themes": {
+    "colorMinor": "black",
     "colorBackground": "black"
+  },
+  "process": {
+    "displayOnlyCurrent": true,
+    "hideWindowTitle": true
   },
   "spacesDisplay": {
     "hideEmptySpaces": true
+  },
+  "widgets": {
+    "soundWidget": false
+  },
+  "networkWidgetOptions": {
+    "hideNetworkName": true
+  },
+  "dateWidgetOptions": {
+    "showIcon": false
+  },
+  "timeWidgetOptions": {
+    "showIcon": false
   }
 }
