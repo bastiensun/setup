@@ -1,0 +1,16 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Jean-Tinland/simple-bar/refs/heads/master/lib/schemas/config.json",
+  "global": {
+    "theme": "dark",
+    "noColorInData": true,
+    "disableAnimations": true,
+    "aerospacePath": "/opt/homebrew/bin/aerospace",
+    "windowManager": "aerospace"
+  },
+  "themes": {
+    "colorBackground": "black"
+  },
+  "spacesDisplay": {
+    "hideEmptySpaces": true
+  }
+}

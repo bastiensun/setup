@@ -50,6 +50,7 @@
         - raycast
         - signal
         - spotify
+        - ubersicht
         - zoom
 
     # Configure
@@ -73,6 +74,12 @@
         type: bool
         value: false
 
+    - name: Automatically hide the menu bar
+      community.general.osx_defaults:
+        domain: NSGlobalDomain
+        key: _HIHideMenuBar
+        type: bool
+        value: true
     - name: Show all filename extensions
       community.general.osx_defaults:
         domain: NSGlobalDomain
@@ -148,3 +155,14 @@
         dest: ~/.config/aerospace/aerospace.toml
         mode: u=rw,g=r,o=r
         src: ./dotfiles/aerospace.toml
+
+    - name: Configure simple-bar
+      ansible.builtin.git:
+        repo: https://github.com/Jean-Tinland/simple-bar.git
+        dest: "~/Library/Application\ Support/Übersicht/widgets/simple-bar"
+        version: "HEAD" # noqa: latest
+    - name: Copy simple-bar config
+      ansible.builtin.copy:
+        dest: ~/.simplebarrc
+        mode: u=rw,g=r,o=r
+        src: ./dotfiles/.simplebarrc
