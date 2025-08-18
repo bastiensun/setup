@@ -17,7 +17,7 @@ jobs:
     name: Lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: ansible/ansible-lint@v25
 
   integration:
@@ -27,7 +27,7 @@ jobs:
       # Uninstall runner preinstalled software (cf. https://github.com/actions/runner-images?tab=readme-ov-file#software-and-image-support)
       - run: brew uninstall node@20
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Install Ansible
         run: |
           python3 -m venv venv
