@@ -1,0 +1,20 @@
+{
+  "auto_signature_help": true,
+  "diagnostics": {
+    "inline": {
+      "enabled": true
+    }
+  },
+  "git": {
+    "inline_blame": {
+      "show_commit_summary": true
+    }
+  },
+  "minimap": {
+    "show": "auto"
+  },
+  "vim": {
+    "toggle_relative_line_numbers": true
+  },
+  "vim_mode": true
+}
