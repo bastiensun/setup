@@ -29,9 +29,6 @@ jobs:
     name: Integration
     runs-on: macos-latest
     steps:
-      # Uninstall runner preinstalled software (cf. https://github.com/actions/runner-images?tab=readme-ov-file#software-and-image-support)
-      - run: brew uninstall node@20
-
       - uses: actions/checkout@v4
       - name: Install Ansible
         run: |
