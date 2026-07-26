@@ -103,6 +103,68 @@
             dest: ~/.config/caveman/config.json
             mode: u=rw,g=r,o=r
             src: ./dotfiles/caveman.json
+        # Workaround: put SKILL.md where caveman's hook looks for it. Both
+        # tasks below exist only for this; delete them together once the
+        # "Remove" condition is met.
+        #
+        # apm installs one package into two folders, split by file type:
+        #   ~/.claude/hooks/caveman/   <- caveman-activate.js, run each session
+        #   ~/.claude/skills/caveman/  <- SKILL.md, the rules it must read
+        # The hook is registered in settings.json as
+        #   node "${CLAUDE_PLUGIN_ROOT}/src/hooks/caveman-activate.js"
+        # and apm substitutes the hooks folder for that placeholder. The script
+        # then resolves SKILL.md relative to it, so it looks in
+        #   ~/.claude/hooks/caveman/skills/caveman/SKILL.md   <- nothing here
+        # The link below makes that path land on the real skills folder.
+        # caveman itself is not patched.
+        #
+        # Nothing warns you when the link is missing. The failed read is caught
+        # and the script prints a hardcoded fallback ruleset instead, so
+        # caveman still activates -- with the wrong rules. The header line is
+        # no help either: it reports the mode from ~/.config/caveman/config.json,
+        # a read that always succeeds, so it looks right in both cases. Only
+        # the body of the output differs, hence:
+        #
+        # Check:  node ~/.claude/hooks/caveman/src/hooks/caveman-activate.js \
+        #           | grep -c '## Intensity'
+        #         1 = real SKILL.md loaded, nothing to do.
+        #         0 = fallback: the link is missing or dangling. Re-run this
+        #             play and check again; if it still prints 0, the paths
+        #             above have moved -- see "Remove".
+        #         ('## Intensity' appears in the real file for every mode, and
+        #          never in the fallback.)
+        # Remove: once apm substitutes a folder that contains skills/, or the
+        #         hook also searches ~/.claude/skills/. It already tries three
+        #         candidate paths (see the comment above `skillCandidates` in
+        #         caveman-activate.js) -- none of them reaches apm's split
+        #         layout, which is exactly what this link bridges.
+        # Verified 2026-07-26 against apm 0.26.0: still needed, still works.
+        # apm exposes no setting for the substituted root. The link survives
+        # `apm install`.
+        - name: Create caveman hooks skills directory
+          ansible.builtin.file:
+            mode: u=rwx,g=rx,o=rx
+            path: ~/.claude/hooks/caveman/skills
+            state: directory
+        - name: Link caveman skill into hook's search path
+          ansible.builtin.file:
+            src: ~/.claude/skills/caveman
+            dest: ~/.claude/hooks/caveman/skills/caveman
+            # No force: true, on purpose -- it is the reflex fix when a link
+            # task fails, and here it would hide the signal you want.
+            #
+            # Without it the task still self-heals the cases that matter: a
+            # missing dest, or a symlink that dangles or points elsewhere, is
+            # replaced. It fails only when something real sits at dest ("refusing
+            # to convert from directory to symlink"), which means apm or caveman
+            # started shipping files there -- the "Remove" condition above. That
+            # failure is how you find out.
+            #
+            # force would convert an *empty* directory by deleting it, quietly
+            # reapplying this workaround on top of the upstream fix. (A non-empty
+            # one fails either way: "the directory ... is not empty, refusing to
+            # convert it".)
+            state: link
 
     - name: Configure macOS defaults
       block:
