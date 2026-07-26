@@ -9,8 +9,24 @@ dependencies:
         - claude
     - git: mattpocock/skills
       skills:
+        - ask-matt
+        - code-review
+        - diagnosing-bugs
         - grill-me
+        - grill-with-docs
+        - grilling
+        - grilling
+        - handoff
+        - improve-codebase-architecture
+        - resolving-merge-conflicts
         - setup-matt-pocock-skills
+        - tdd
+        - teach
+        - to-spec
+        - to-tickets
+        - triage
+        - wayfinder
+        - writing-great-skills
     - git: multica-ai/andrej-karpathy-skills
       skills:
         - karpathy-guidelines

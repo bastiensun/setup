@@ -1,191 +1,222 @@
 - name: Setup
   hosts: localhost
   tasks:
-    - name: Install fish
-      community.general.homebrew:
-        name: fish
-    - name: Set fish shell
-      become: true
-      ansible.builtin.user:
-        name: "{{ ansible_user_id }}"
-        shell: /opt/homebrew/bin/fish
-    - name: Create fish directory
-      ansible.builtin.file:
-        mode: u=rwx,g=rx,o=rx
-        path: ~/.config/fish
-        state: directory
-    - name: Add Homebrew to PATH
-      ansible.builtin.blockinfile:
-        block: |
-          eval "$(/opt/homebrew/bin/brew shellenv)"
-          starship init fish | source
-        create: true
-        mode: u=rw,g=r,o=r
-        path: ~/.config/fish/config.fish
+    - name: Configure fish shell
+      block:
+        - name: Install fish
+          community.general.homebrew:
+            name: fish
+        - name: Set fish shell
+          become: true
+          ansible.builtin.user:
+            name: "{{ ansible_user_id }}"
+            shell: /opt/homebrew/bin/fish
+        - name: Create fish directory
+          ansible.builtin.file:
+            mode: u=rwx,g=rx,o=rx
+            path: ~/.config/fish
+            state: directory
+        - name: Add Homebrew to PATH
+          ansible.builtin.blockinfile:
+            block: |
+              eval "$(/opt/homebrew/bin/brew shellenv)"
+              starship init fish | source
+            create: true
+            mode: u=rw,g=r,o=r
+            path: ~/.config/fish/config.fish
 
-    # Install
-    - name: Create .homebrew directory
-      ansible.builtin.file:
-        mode: u=rwx,g=rx,o=rx
-        path: ~/.homebrew
-        state: directory
-    - name: Copy Brewfile
-      ansible.builtin.copy:
-        dest: ~/.homebrew/Brewfile
-        mode: u=rw,g=r,o=r
-        src: ./dotfiles/Brewfile
     - name: Install Homebrew packages
-      ansible.builtin.command:
-        cmd: brew bundle install --global --no-upgrade
-      register: brew_bundle_install
-      changed_when: "'Installing' in brew_bundle_install.stdout"
+      block:
+        - name: Create .homebrew directory
+          ansible.builtin.file:
+            mode: u=rwx,g=rx,o=rx
+            path: ~/.homebrew
+            state: directory
+        - name: Copy Brewfile
+          ansible.builtin.copy:
+            dest: ~/.homebrew/Brewfile
+            mode: u=rw,g=r,o=r
+            src: ./dotfiles/Brewfile
+        - name: Install Homebrew packages
+          ansible.builtin.command:
+            cmd: brew bundle install --global --no-upgrade
+          register: brew_bundle_install
+          changed_when: "'Installing' in brew_bundle_install.stdout"
 
-    - name: Create mise directory
-      ansible.builtin.file:
-        mode: u=rwx,g=rx,o=rx
-        path: ~/.config/mise
-        state: directory
-    - name: Copy mise global config
-      ansible.builtin.copy:
-        dest: ~/.config/mise/config.toml
-        mode: u=rw,g=r,o=r
-        src: ./dotfiles/mise-global.toml
     - name: Install tools via mise
-      ansible.builtin.command:
-        cmd: mise install
-      register: mise_install
-      changed_when: "'mise all tools are installed' not in mise_install.stderr"
+      block:
+        - name: Create mise directory
+          ansible.builtin.file:
+            mode: u=rwx,g=rx,o=rx
+            path: ~/.config/mise
+            state: directory
+        - name: Copy mise global config
+          ansible.builtin.copy:
+            dest: ~/.config/mise/config.toml
+            mode: u=rw,g=r,o=r
+            src: ./dotfiles/mise-global.toml
+        - name: Install tools via mise
+          ansible.builtin.command:
+            cmd: mise install
+          register: mise_install
+          changed_when: "'mise all tools are installed' not in mise_install.stderr"
 
-    - name: Create apm directory
-      ansible.builtin.file:
-        mode: u=rwx,g=rx,o=rx
-        path: ~/.apm
-        state: directory
-    - name: Copy apm global config
-      ansible.builtin.copy:
-        dest: ~/.apm/apm.yml
-        mode: u=rw,g=r,o=r
-        src: ./dotfiles/apm.yml
     - name: Install skills via apm
-      ansible.builtin.command:
-        cmd: apm install --global
-      changed_when: false
+      block:
+        - name: Create apm directory
+          ansible.builtin.file:
+            mode: u=rwx,g=rx,o=rx
+            path: ~/.apm
+            state: directory
+        - name: Copy apm global config
+          ansible.builtin.copy:
+            dest: ~/.apm/apm.yml
+            mode: u=rw,g=r,o=r
+            src: ./dotfiles/apm.yml
+        - name: Install skills via apm
+          ansible.builtin.command:
+            cmd: apm install --global
+          changed_when: false
 
-    # Configure
-    - name: Tap to click
-      community.general.osx_defaults:
-        domain: com.apple.AppleMultitouchTrackpad
-        key: Clicking
-        type: int
-        value: 1
+    - name: Configure ponytail
+      block:
+        - name: Create ponytail config directory
+          ansible.builtin.file:
+            mode: u=rwx,g=rx,o=rx
+            path: ~/.config/ponytail
+            state: directory
+        - name: Copy ponytail config
+          ansible.builtin.copy:
+            dest: ~/.config/ponytail/config.json
+            mode: u=rw,g=r,o=r
+            src: ./dotfiles/ponytail.json
 
-    - name: Automatically hide and show the Dock
-      community.general.osx_defaults:
-        domain: com.apple.dock
-        key: autohide
-        type: bool
-        value: true
-    - name: Show suggested and recent apps in Dock
-      community.general.osx_defaults:
-        domain: com.apple.dock
-        key: show-recents
-        type: bool
-        value: false
+    - name: Configure macOS defaults
+      block:
+        - name: Tap to click
+          community.general.osx_defaults:
+            domain: com.apple.AppleMultitouchTrackpad
+            key: Clicking
+            type: int
+            value: 1
 
-    - name: Automatically hide the menu bar
-      community.general.osx_defaults:
-        domain: NSGlobalDomain
-        key: _HIHideMenuBar
-        type: bool
-        value: true
-    - name: Show all filename extensions
-      community.general.osx_defaults:
-        domain: NSGlobalDomain
-        key: AppleShowAllExtensions
-        type: bool
-        value: true
-    - name: Show path bar
-      community.general.osx_defaults:
-        domain: com.apple.finder
-        key: ShowPathbar
-        type: bool
-        value: true
+        - name: Automatically hide and show the Dock
+          community.general.osx_defaults:
+            domain: com.apple.dock
+            key: autohide
+            type: bool
+            value: true
+        - name: Show suggested and recent apps in Dock
+          community.general.osx_defaults:
+            domain: com.apple.dock
+            key: show-recents
+            type: bool
+            value: false
 
-    - name: Show battery percentage in the menu bar
-      community.general.osx_defaults:
-        domain: com.apple.controlcenter
-        host: currentHost
-        key: BatteryShowPercentage
-        type: bool
-        value: true
+        - name: Automatically hide the menu bar
+          community.general.osx_defaults:
+            domain: NSGlobalDomain
+            key: _HIHideMenuBar
+            type: bool
+            value: true
+        - name: Show all filename extensions
+          community.general.osx_defaults:
+            domain: NSGlobalDomain
+            key: AppleShowAllExtensions
+            type: bool
+            value: true
+        - name: Show path bar
+          community.general.osx_defaults:
+            domain: com.apple.finder
+            key: ShowPathbar
+            type: bool
+            value: true
 
-    - name: Generate SSH key
-      community.crypto.openssh_keypair:
-        path: ~/.ssh/id_ed25519
-        type: ed25519
+        - name: Show battery percentage in the menu bar
+          community.general.osx_defaults:
+            domain: com.apple.controlcenter
+            host: currentHost
+            key: BatteryShowPercentage
+            type: bool
+            value: true
 
-    - name: Configure ~/.gitconfig
-      community.general.git_config:
-        name: "{{ item.name }}"
-        scope: global
-        value: "{{ item.value }}"
-      loop:
-        - name: user.name
-          value: "Bastien Sun"
-        - name: user.email
-          value: "43788700+bastiensun@users.noreply.github.com"
-        - name: core.editor
-          value: "zed --wait"
+    - name: Configure Git and SSH
+      block:
+        - name: Generate SSH key
+          community.crypto.openssh_keypair:
+            path: ~/.ssh/id_ed25519
+            type: ed25519
 
-        - name: gpg.format
-          value: "ssh"
-        - name: user.signingkey
-          value: "~/.ssh/id_ed25519.pub"
-        - name: commit.gpgsign
-          value: "true"
+        - name: Configure ~/.gitconfig
+          community.general.git_config:
+            name: "{{ item.name }}"
+            scope: global
+            value: "{{ item.value }}"
+          loop:
+            - name: user.name
+              value: "Bastien Sun"
+            - name: user.email
+              value: "43788700+bastiensun@users.noreply.github.com"
+            - name: core.editor
+              value: "zed --wait"
 
-    - name: Create Ghostty directory
-      ansible.builtin.file:
-        mode: u=rwx,g=rx,o=rx
-        path: ~/.config/ghostty
-        state: directory
+            - name: gpg.format
+              value: "ssh"
+            - name: user.signingkey
+              value: "~/.ssh/id_ed25519.pub"
+            - name: commit.gpgsign
+              value: "true"
+
     - name: Configure Ghostty
-      ansible.builtin.blockinfile:
-        block: |
-          theme = dark:Catppuccin Mocha,light:Catppuccin Latte
-        create: true
-        mode: u=rw,g=r,o=r
-        path: ~/.config/ghostty/config
+      block:
+        - name: Create Ghostty directory
+          ansible.builtin.file:
+            mode: u=rwx,g=rx,o=rx
+            path: ~/.config/ghostty
+            state: directory
+        - name: Configure Ghostty
+          ansible.builtin.blockinfile:
+            block: |
+              theme = dark:Catppuccin Mocha,light:Catppuccin Latte
+            create: true
+            mode: u=rw,g=r,o=r
+            path: ~/.config/ghostty/config
 
-    - name: Create AeroSpace directory
-      ansible.builtin.file:
-        mode: u=rwx,g=rx,o=rx
-        path: ~/.config/aerospace
-        state: directory
-    - name: Copy AeroSpace config
-      ansible.builtin.copy:
-        dest: ~/.config/aerospace/aerospace.toml
-        mode: u=rw,g=r,o=r
-        src: ./dotfiles/aerospace.toml
+    - name: Configure AeroSpace
+      block:
+        - name: Create AeroSpace directory
+          ansible.builtin.file:
+            mode: u=rwx,g=rx,o=rx
+            path: ~/.config/aerospace
+            state: directory
+        - name: Copy AeroSpace config
+          ansible.builtin.copy:
+            dest: ~/.config/aerospace/aerospace.toml
+            mode: u=rw,g=r,o=r
+            src: ./dotfiles/aerospace.toml
 
     - name: Configure simple-bar
-      ansible.builtin.git:
-        repo: https://github.com/Jean-Tinland/simple-bar.git
-        dest: "~/Library/Application Support/Übersicht/widgets/simple-bar"
-        version: "HEAD" # noqa: latest
-    - name: Copy simple-bar config
-      ansible.builtin.copy:
-        dest: ~/.simplebarrc
-        mode: u=rw,g=r,o=r
-        src: ./dotfiles/simple-bar.json
+      block:
+        - name: Clone simple-bar
+          ansible.builtin.git:
+            repo: https://github.com/Jean-Tinland/simple-bar.git
+            dest: "~/Library/Application Support/Übersicht/widgets/simple-bar"
+            version: "HEAD" # noqa: latest
+        - name: Copy simple-bar config
+          ansible.builtin.copy:
+            dest: ~/.simplebarrc
+            mode: u=rw,g=r,o=r
+            src: ./dotfiles/simple-bar.json
 
-    - name: Create Zed directory
-      ansible.builtin.file:
-        mode: u=rwx,g=rx,o=rx
-        path: ~/.config/zed
-        state: directory
-    - name: Copy Zed config
-      ansible.builtin.copy:
-        dest: ~/.config/zed/settings.json
-        mode: u=rw,g=r,o=r
-        src: ./dotfiles/zed.json
+    - name: Configure Zed
+      block:
+        - name: Create Zed directory
+          ansible.builtin.file:
+            mode: u=rwx,g=rx,o=rx
+            path: ~/.config/zed
+            state: directory
+        - name: Copy Zed config
+          ansible.builtin.copy:
+            dest: ~/.config/zed/settings.json
+            mode: u=rw,g=r,o=r
+            src: ./dotfiles/zed.json
