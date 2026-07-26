@@ -54,6 +54,6 @@ jobs:
           source venv/bin/activate
           idempotence=$(mktemp)
           ansible-playbook ${RUNNER_DEBUG:+-vvv} playbook.yml | tee -a ${idempotence}
-          tail ${idempotence} | grep --quiet 'changed=0.*failed=0' && (echo 'Idempotence test: pass' && exit 0) || (echo 'Idempotence test: fail' && exit 1)
+          grep --quiet 'changed=0.*failed=0' ${idempotence} && (echo 'Idempotence test: pass' && exit 0) || (echo 'Idempotence test: fail' && exit 1)
         env:
           ANSIBLE_FORCE_COLOR: true
