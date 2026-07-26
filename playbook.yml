@@ -75,7 +75,7 @@
             src: ./dotfiles/apm.yml
         - name: Install skills via apm
           ansible.builtin.command:
-            cmd: apm install --global
+            cmd: mise exec -- apm install --global
           changed_when: false
 
     - name: Configure ponytail
