@@ -1,0 +1,16 @@
+name: sun
+version: 1.0.0
+targets:
+  - claude
+dependencies:
+  apm:
+    - git: dietrichgebert/ponytail
+      targets:
+        - claude
+    - git: mattpocock/skills
+      skills:
+        - grill-me
+        - setup-matt-pocock-skills
+    - git: multica-ai/andrej-karpathy-skills
+      skills:
+        - karpathy-guidelines

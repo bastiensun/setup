@@ -24,32 +24,52 @@
         path: ~/.config/fish/config.fish
 
     # Install
-    - name: Install Homebrew formula
-      community.general.homebrew:
-        name: "{{ item }}"
-      loop:
-        - act
-        - mise
-        - mole
-        - starship
-        - tldr
+    - name: Create .homebrew directory
+      ansible.builtin.file:
+        mode: u=rwx,g=rx,o=rx
+        path: ~/.homebrew
+        state: directory
+    - name: Copy Brewfile
+      ansible.builtin.copy:
+        dest: ~/.homebrew/Brewfile
+        mode: u=rw,g=r,o=r
+        src: ./dotfiles/Brewfile
+    - name: Install Homebrew packages
+      ansible.builtin.command:
+        cmd: brew bundle install --global --no-upgrade
+      register: brew_bundle_install
+      changed_when: "'Installing' in brew_bundle_install.stdout"
 
-    - name: Install Homebrew cask
-      community.general.homebrew_cask:
-        name: "{{ item }}"
-      loop:
-        - brave-browser
-        - discord
-        - docker
-        - ghostty
-        - homerow
-        - nikitabobko/tap/aerospace
-        - obsidian
-        - raycast
-        - signal
-        - ubersicht
-        - zed
-        - zoom
+    - name: Create mise directory
+      ansible.builtin.file:
+        mode: u=rwx,g=rx,o=rx
+        path: ~/.config/mise
+        state: directory
+    - name: Copy mise global config
+      ansible.builtin.copy:
+        dest: ~/.config/mise/config.toml
+        mode: u=rw,g=r,o=r
+        src: ./dotfiles/mise-global.toml
+    - name: Install tools via mise
+      ansible.builtin.command:
+        cmd: mise install
+      register: mise_install
+      changed_when: "'mise all tools are installed' not in mise_install.stderr"
+
+    - name: Create apm directory
+      ansible.builtin.file:
+        mode: u=rwx,g=rx,o=rx
+        path: ~/.apm
+        state: directory
+    - name: Copy apm global config
+      ansible.builtin.copy:
+        dest: ~/.apm/apm.yml
+        mode: u=rw,g=r,o=r
+        src: ./dotfiles/apm.yml
+    - name: Install skills via apm
+      ansible.builtin.command:
+        cmd: apm install --global
+      changed_when: false
 
     # Configure
     - name: Tap to click
@@ -115,7 +135,7 @@
         - name: user.email
           value: "43788700+bastiensun@users.noreply.github.com"
         - name: core.editor
-          value: "zed"
+          value: "zed --wait"
 
         - name: gpg.format
           value: "ssh"
@@ -151,7 +171,7 @@
     - name: Configure simple-bar
       ansible.builtin.git:
         repo: https://github.com/Jean-Tinland/simple-bar.git
-        dest: "~/Library/Application\ Support/Übersicht/widgets/simple-bar"
+        dest: "~/Library/Application Support/Übersicht/widgets/simple-bar"
         version: "HEAD" # noqa: latest
     - name: Copy simple-bar config
       ansible.builtin.copy:
@@ -159,8 +179,13 @@
         mode: u=rw,g=r,o=r
         src: ./dotfiles/simple-bar.json
 
+    - name: Create Zed directory
+      ansible.builtin.file:
+        mode: u=rwx,g=rx,o=rx
+        path: ~/.config/zed
+        state: directory
     - name: Copy Zed config
       ansible.builtin.copy:
-        dest: ~/.config/zed
+        dest: ~/.config/zed/settings.json
         mode: u=rw,g=r,o=r
         src: ./dotfiles/zed.json
