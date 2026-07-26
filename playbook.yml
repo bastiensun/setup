@@ -59,7 +59,7 @@
           ansible.builtin.command:
             cmd: mise install
           register: mise_install
-          changed_when: "'mise all tools are installed' not in mise_install.stderr"
+          changed_when: "'all tools are installed' not in mise_install.stderr"
 
     - name: Install skills via apm
       block:
