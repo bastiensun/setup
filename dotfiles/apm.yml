@@ -1,0 +1,38 @@
+name: sun
+version: 1.0.0
+targets:
+  - claude
+dependencies:
+  apm:
+    - git: dietrichgebert/ponytail
+      targets:
+        - claude
+    - git: JuliusBrussee/caveman
+      targets:
+        - claude
+    - git: mattpocock/skills
+      skills:
+        - ask-matt
+        - code-review
+        - diagnosing-bugs
+        - grill-me
+        - grill-with-docs
+        - grilling
+        - handoff
+        - improve-codebase-architecture
+        - resolving-merge-conflicts
+        - setup-matt-pocock-skills
+        - tdd
+        - teach
+        - to-spec
+        - to-tickets
+        - triage
+        - wayfinder
+        - writing-great-skills
+    - git: multica-ai/andrej-karpathy-skills
+      skills:
+        - karpathy-guidelines
+    - git: cursor/plugins
+      path: cursor-team-kit/skills/thermo-nuclear-code-quality-review
+      skills:
+        - thermo-nuclear-code-quality-review

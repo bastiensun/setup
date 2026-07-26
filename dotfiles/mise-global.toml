@@ -1,0 +1,4 @@
+[tools]
+apm = "latest"
+gh = "latest"
+node = "lts"
