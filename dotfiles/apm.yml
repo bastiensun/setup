@@ -7,6 +7,9 @@ dependencies:
     - git: dietrichgebert/ponytail
       targets:
         - claude
+    - git: JuliusBrussee/caveman
+      targets:
+        - claude
     - git: mattpocock/skills
       skills:
         - ask-matt
@@ -14,7 +17,6 @@ dependencies:
         - diagnosing-bugs
         - grill-me
         - grill-with-docs
-        - grilling
         - grilling
         - handoff
         - improve-codebase-architecture
@@ -30,3 +32,7 @@ dependencies:
     - git: multica-ai/andrej-karpathy-skills
       skills:
         - karpathy-guidelines
+    - git: cursor/plugins
+      path: cursor-team-kit/skills/thermo-nuclear-code-quality-review
+      skills:
+        - thermo-nuclear-code-quality-review

@@ -91,6 +91,19 @@
             mode: u=rw,g=r,o=r
             src: ./dotfiles/ponytail.json
 
+    - name: Configure caveman
+      block:
+        - name: Create caveman config directory
+          ansible.builtin.file:
+            mode: u=rwx,g=rx,o=rx
+            path: ~/.config/caveman
+            state: directory
+        - name: Copy caveman config
+          ansible.builtin.copy:
+            dest: ~/.config/caveman/config.json
+            mode: u=rw,g=r,o=r
+            src: ./dotfiles/caveman.json
+
     - name: Configure macOS defaults
       block:
         - name: Tap to click
