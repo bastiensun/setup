@@ -1,0 +1,36 @@
+name: sun
+version: 1.0.0
+targets:
+  - claude
+dependencies:
+  apm:
+    - git: cursor/plugins
+      path: cursor-team-kit/skills/thermo-nuclear-code-quality-review
+      skills:
+        - thermo-nuclear-code-quality-review
+    - git: dietrichgebert/ponytail
+      targets:
+        - claude
+    - git: mattpocock/skills
+      skills:
+        - setup-matt-pocock-skills
+        - ask-matt
+
+        - grill-with-docs
+        - to-spec
+        - to-tickets
+        - code-review
+
+        - wayfinder
+        - prototype
+        - research
+
+        - improve-codebase-architecture
+        - diagnosing-bugs
+        - resolving-merge-conflicts
+        - triage
+
+        - codebase-design
+        - domain-modeling
+        - grilling
+        - tdd

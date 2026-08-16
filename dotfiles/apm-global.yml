@@ -1,0 +1,12 @@
+name: sun
+version: 1.0.0
+targets:
+  - claude
+dependencies:
+  apm:
+    - git: mattpocock/skills
+      skills:
+        - grill-me
+        - grilling
+        - wait-what
+        - writing-for-agents
