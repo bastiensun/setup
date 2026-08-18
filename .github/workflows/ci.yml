@@ -57,3 +57,33 @@ jobs:
           grep --quiet 'changed=0.*failed=0' ${idempotence} && (echo 'Idempotence test: pass' && exit 0) || (echo 'Idempotence test: fail' && exit 1)
         env:
           ANSIBLE_FORCE_COLOR: true
+
+  mise-lint:
+    name: Mise lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: jdx/mise-action@v4
+        with:
+          install: false
+          cache: false
+          log_level: ${{ runner.debug && 'debug' || 'info' }}
+      - name: Check mise.toml
+        run: |
+          mise tasks ls 2>&1 | tee parse.log
+          ! grep --quiet 'unknown field' parse.log
+
+  bootstrap:
+    name: Bootstrap
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: jdx/mise-action@v4
+        with:
+          bootstrap: true
+          bootstrap_skip: user
+          cache: false
+          log_level: ${{ runner.debug && 'debug' || 'info' }}
+      - name: Idempotence check
+        run: |
+          mise bootstrap repos status --missing
