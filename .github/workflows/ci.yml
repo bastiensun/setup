@@ -86,4 +86,8 @@ jobs:
           log_level: ${{ runner.debug && 'debug' || 'info' }}
       - name: Idempotence check
         run: |
+          mise bootstrap packages status --missing
           mise bootstrap repos status --missing
+      - name: Check AeroSpace was installed
+        run: |
+          test -d /Applications/AeroSpace.app

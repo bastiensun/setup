@@ -10,5 +10,36 @@ run = ['uv run pre-commit run --all-files']
 [settings]
 idiomatic_version_file_enable_tools = ["python"]
 
+[bootstrap.hooks.pre-packages]
+run = [
+  'command -v brew || NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"',
+  'test -d /Applications/AeroSpace.app || brew install --cask nikitabobko/tap/aerospace',
+]
+
+[bootstrap.packages]
+"brew:act" = "latest"
+"brew:fish" = "latest"
+"brew:mole" = "latest"
+"brew:starship" = "latest"
+"brew:tldr" = "latest"
+"brew-cask:arc" = "latest"
+"brew-cask:brave-browser" = "latest"
+"brew-cask:claude" = "latest"
+"brew-cask:discord" = "latest"
+"brew-cask:docker-desktop" = "latest"
+"brew-cask:ghostty" = "latest"
+"brew-cask:grammarly-desktop" = "latest"
+"brew-cask:homerow" = "latest"
+"brew-cask:obsidian" = "latest"
+"brew-cask:raycast" = "latest"
+"brew-cask:signal" = "latest"
+"brew-cask:thebrowsercompany-dia" = "latest"
+"brew-cask:ubersicht" = "latest"
+"brew-cask:zed" = "latest"
+"brew-cask:zoom" = "latest"
+
+[bootstrap.user]
+login_shell = "/opt/homebrew/bin/fish"
+
 [bootstrap.repos]
 "~/Library/Application Support/Übersicht/widgets/simple-bar" = { url = "https://github.com/Jean-Tinland/simple-bar.git", ref = "master" }
