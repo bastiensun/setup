@@ -28,9 +28,14 @@ jobs:
       # and the idempotence check below ran four per-part status commands
       # instead of one, because the aggregate command always reports
       # `user` as missing when that phase is skipped.
+      #
+      # --force-dotfiles: actions/checkout writes a real ~/.gitconfig
+      # before this step runs, and mise refuses to replace a real file
+      # with a symlink otherwise.
       - uses: jdx/mise-action@v4
         with:
           bootstrap: true
+          bootstrap_args: --force-dotfiles
           cache: false
           log_level: ${{ runner.debug && 'debug' || 'info' }}
       - name: Idempotence check
