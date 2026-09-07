@@ -13,51 +13,6 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  lint:
-    name: Lint
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v7
-      - uses: ansible/ansible-lint@v26
-
-      - uses: astral-sh/setup-uv@v6
-        with:
-          version: "0.8.3"
-      - run: uv run pre-commit run --all-files
-
-  integration:
-    name: Integration
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v7
-      - name: Install Ansible
-        run: |
-          python3 -m venv venv
-          source venv/bin/activate
-          pip3 install --requirement requirements.txt
-      - name: Install Ansible collections
-        run: |
-          source venv/bin/activate
-          ansible-galaxy install --role-file requirements.yml
-      - name: Perform a syntax check on the Ansible playbook
-        run: |
-          source venv/bin/activate
-          ansible-playbook --syntax-check playbook.yml
-      - name: Run Ansible playbook
-        run: |
-          source venv/bin/activate
-          ansible-playbook ${RUNNER_DEBUG:+-vvv} playbook.yml
-        env:
-          ANSIBLE_FORCE_COLOR: true
-      - name: Idempotence check
-        run: |
-          source venv/bin/activate
-          idempotence=$(mktemp)
-          ansible-playbook ${RUNNER_DEBUG:+-vvv} playbook.yml | tee -a ${idempotence}
-          grep --quiet 'changed=0.*failed=0' ${idempotence} && (echo 'Idempotence test: pass' && exit 0) || (echo 'Idempotence test: fail' && exit 1)
-        env:
-          ANSIBLE_FORCE_COLOR: true
-
   mise-lint:
     name: Mise lint
     runs-on: ubuntu-latest

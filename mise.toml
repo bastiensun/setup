@@ -1,15 +1,3 @@
-[tools]
-uv = "0.8.3"
-
-[tasks.default]
-run = ['uv run ansible-playbook --ask-become-pass playbook.yml']
-
-[tasks.lint]
-run = ['uv run pre-commit run --all-files']
-
-[settings]
-idiomatic_version_file_enable_tools = ["python"]
-
 [bootstrap.hooks.pre-packages]
 run = [
   'command -v brew || NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"',
