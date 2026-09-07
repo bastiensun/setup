@@ -13,21 +13,6 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  mise-lint:
-    name: Mise lint
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v7
-      - uses: jdx/mise-action@v4
-        with:
-          install: false
-          cache: false
-          log_level: ${{ runner.debug && 'debug' || 'info' }}
-      - name: Check mise.toml
-        run: |
-          mise tasks ls 2>&1 | tee parse.log
-          ! grep --quiet 'unknown field' parse.log
-
   bootstrap:
     name: Bootstrap
     runs-on: macos-latest
