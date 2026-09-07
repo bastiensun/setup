@@ -47,6 +47,7 @@ run = "defaults -currentHost write com.apple.controlcenter BatteryShowPercentage
 "~/.config/mise/config.toml" = { source = "dotfiles/mise-global.toml" }
 "~/.apm/apm.yml" = { source = "dotfiles/apm-global.yml" }
 "~/.config/ponytail/config.json" = { source = "dotfiles/ponytail.json" }
+"~/.claude/output-styles/asd-ste100.md" = { source = "dotfiles/claude-output-styles/asd-ste100.md" }
 "~/.config/aerospace/aerospace.toml" = { source = "dotfiles/aerospace.toml" }
 "~/.config/zed/settings.json" = { source = "dotfiles/zed.json" }
 "~/.simplebarrc" = { source = "dotfiles/simple-bar.json", mode = "copy" }
