@@ -38,6 +38,15 @@ run = [
 "brew-cask:zed" = "latest"
 "brew-cask:zoom" = "latest"
 
+[bootstrap.macos.defaults]
+"com.apple.AppleMultitouchTrackpad" = { Clicking = 1 }
+"com.apple.dock" = { autohide = true, show-recents = false }
+"NSGlobalDomain" = { _HIHideMenuBar = true, AppleShowAllExtensions = true }
+"com.apple.finder" = { ShowPathbar = true }
+
+[bootstrap.hooks.post-defaults]
+run = "defaults -currentHost write com.apple.controlcenter BatteryShowPercentage -bool true"
+
 [dotfiles]
 "~/.config/fish/config.fish" = { source = "dotfiles/fish-config.fish" }
 "~/.config/ghostty/config" = { source = "dotfiles/ghostty.config" }

@@ -89,6 +89,7 @@ jobs:
           mise bootstrap packages status --missing
           mise bootstrap repos status --missing
           mise bootstrap dotfiles status --missing
+          mise bootstrap macos defaults status --missing
       - name: Check AeroSpace was installed
         run: |
           test -d /Applications/AeroSpace.app
