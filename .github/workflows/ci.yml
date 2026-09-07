@@ -33,8 +33,6 @@ jobs:
       - name: Idempotence check
         run: mise bootstrap status --missing
       - name: Check AeroSpace was installed
-        run: |
-          test -d /Applications/AeroSpace.app
+        run: test -d /Applications/AeroSpace.app
       - name: Check the SSH key was generated
-        run: |
-          test -f ~/.ssh/id_ed25519
+        run: test -f ~/.ssh/id_ed25519

@@ -299,3 +299,7 @@ pyrightconfig.json
 
 # APM dependencies
 apm_modules/
+
+
+.agents/
+.claude/
