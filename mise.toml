@@ -2,6 +2,7 @@
 run = [
   'command -v brew || NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"',
   'test -d /Applications/AeroSpace.app || brew install --cask nikitabobko/tap/aerospace',
+  'test -d /Applications/Übersicht.app || brew install --cask ubersicht',
 ]
 
 [tasks.bootstrap]
@@ -28,7 +29,6 @@ run = [
 "brew-cask:raycast" = "latest"
 "brew-cask:signal" = "latest"
 "brew-cask:thebrowsercompany-dia" = "latest"
-"brew-cask:ubersicht" = "latest"
 "brew-cask:zed" = "latest"
 "brew-cask:zoom" = "latest"
 
