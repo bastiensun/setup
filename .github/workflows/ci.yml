@@ -36,7 +36,6 @@ jobs:
         with:
           bootstrap: true
           bootstrap_args: --force-dotfiles
-          cache: false
           log_level: ${{ runner.debug && 'debug' || 'info' }}
       - name: Idempotence check
         run: mise bootstrap status --missing
