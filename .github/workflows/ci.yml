@@ -93,3 +93,6 @@ jobs:
       - name: Check AeroSpace was installed
         run: |
           test -d /Applications/AeroSpace.app
+      - name: Check the SSH key was generated
+        run: |
+          test -f ~/.ssh/id_ed25519

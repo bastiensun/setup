@@ -16,6 +16,12 @@ run = [
   'test -d /Applications/AeroSpace.app || brew install --cask nikitabobko/tap/aerospace',
 ]
 
+[tasks.bootstrap]
+run = [
+  'test -f ~/.ssh/id_ed25519 || ssh-keygen -t ed25519 -N "" -f ~/.ssh/id_ed25519',
+  'mise exec -- apm install --global',
+]
+
 [bootstrap.packages]
 "brew:act" = "latest"
 "brew:fish" = "latest"
