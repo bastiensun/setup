@@ -21,13 +21,14 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v7
-      # Runs every phase, including `user` (chsh sets the login shell).
-      # chsh has no sudo path and no way to answer a password prompt here,
-      # so this may hang or fail non-interactively on a fresh runner.
-      # Previously this step skipped that phase with `bootstrap_skip: user`,
-      # and the idempotence check below ran four per-part status commands
-      # instead of one, because the aggregate command always reports
-      # `user` as missing when that phase is skipped.
+      # bootstrap_skip: user — the `user` phase runs chsh to set the login
+      # shell. chsh has no sudo path and no way to answer a password
+      # prompt here, so on a runner with no TTY it hangs until GitHub's
+      # 6-hour job cap force-cancels it (confirmed: run 34162482954
+      # stalled 6 hours at "Password for runner:"). Skipping it means the
+      # idempotence check below can't use the single aggregate status
+      # command either — it always reports `user` as missing once that
+      # phase is skipped — so it runs four per-part commands instead.
       #
       # --force-dotfiles: actions/checkout writes a real ~/.gitconfig
       # before this step runs, and mise refuses to replace a real file
@@ -35,10 +36,15 @@ jobs:
       - uses: jdx/mise-action@v4
         with:
           bootstrap: true
+          bootstrap_skip: user
           bootstrap_args: --force-dotfiles
           log_level: ${{ runner.debug && 'debug' || 'info' }}
       - name: Idempotence check
-        run: mise bootstrap status --missing
+        run: |
+          mise bootstrap packages status --missing
+          mise bootstrap repos status --missing
+          mise bootstrap dotfiles status --missing
+          mise bootstrap macos defaults status --missing
       - name: Check AeroSpace was installed
         run: test -d /Applications/AeroSpace.app
       - name: Check the SSH key was generated
