@@ -1,0 +1,51 @@
+name: New machine
+
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: 0 0 * * 0
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  bootstrap:
+    name: Bootstrap
+    runs-on: macos-latest
+    steps:
+      # A real installer run can leave behind a destination adopt won't
+      # accept, so the runner's global mise configuration directory is
+      # cleared before the documented command runs, the same way a fresh
+      # machine would need to be.
+      - name: Clear the global mise configuration directory
+        run: rm -rf ~/.config/mise
+      - name: Install mise
+        run: |
+          curl -fsSL https://mise.run | sh
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+      # This is the two-command flow the README documents, run against the
+      # published repository rather than the checkout under review — it
+      # proves the entrypoint itself, not just the configuration it clones.
+      #
+      # --skip user / --force-dotfiles: same reasons as the change gate —
+      # chsh has no TTY to answer, and the runner ships its own
+      # ~/.gitconfig.
+      - name: Adopt the setup repository
+        run: mise bootstrap --adopt bastiensun/setup --skip user --force-dotfiles
+      - name: Idempotence check
+        run: |
+          mise bootstrap packages status --missing
+          mise bootstrap repos status --missing
+          mise bootstrap dotfiles status --missing
+          mise bootstrap macos defaults status --missing
+      - name: Check AeroSpace was installed
+        run: test -d /Applications/AeroSpace.app
+      - name: Check the SSH key was generated
+        run: test -f ~/.ssh/id_ed25519

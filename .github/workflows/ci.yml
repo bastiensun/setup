@@ -5,8 +5,6 @@ on:
   push:
     branches:
       - main
-  schedule:
-    - cron: 0 0 * * 0
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -21,6 +19,16 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v7
+      # The repository is the global mise configuration itself, so the
+      # checkout has to sit at the path a real machine would adopt it to
+      # before bootstrap runs — otherwise this job would test config
+      # loading, trust and relative dotfile-source resolution at a path
+      # that never exists outside CI.
+      - name: Place the checkout at the global mise configuration directory
+        run: |
+          mkdir -p ~/.config
+          mv "$GITHUB_WORKSPACE" ~/.config/mise
+          mkdir -p "$GITHUB_WORKSPACE"
       # bootstrap_skip: user — the `user` phase runs chsh to set the login
       # shell. chsh has no sudo path and no way to answer a password
       # prompt here, so on a runner with no TTY it hangs until GitHub's

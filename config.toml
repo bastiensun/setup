@@ -1,3 +1,8 @@
+[tools]
+apm = "latest"
+gh = "latest"
+node = "lts"
+
 [bootstrap.hooks.pre-packages]
 run = [
   'command -v brew || NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"',
@@ -44,7 +49,6 @@ run = "defaults -currentHost write com.apple.controlcenter BatteryShowPercentage
 [dotfiles]
 "~/.config/fish/config.fish" = { source = "dotfiles/fish-config.fish" }
 "~/.config/ghostty/config" = { source = "dotfiles/ghostty.config" }
-"~/.config/mise/config.toml" = { source = "dotfiles/mise-global.toml" }
 "~/.apm/apm.yml" = { source = "dotfiles/apm-global.yml" }
 "~/.config/ponytail/config.json" = { source = "dotfiles/ponytail.json" }
 "~/.config/aerospace/aerospace.toml" = { source = "dotfiles/aerospace.toml" }
