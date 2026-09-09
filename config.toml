@@ -1,7 +1,10 @@
 [tools]
+act = "latest"
 apm = "latest"
 gh = "latest"
 node = "lts"
+starship = "latest"
+tlrc = "latest"
 
 [bootstrap.hooks.pre-packages]
 run = [
@@ -17,11 +20,8 @@ run = [
 ]
 
 [bootstrap.packages]
-act = "latest"
 "brew:fish" = "latest"
 "brew:mole" = "latest"
-starship = "latest"
-"brew:tldr" = "latest"
 "brew-cask:arc" = "latest"
 "brew-cask:brave-browser" = "latest"
 "brew-cask:claude" = "latest"
