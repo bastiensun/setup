@@ -1,10 +1,12 @@
-name: CI
+name: New machine
 
 on:
-  pull_request:
   push:
     branches:
       - main
+  schedule:
+    - cron: 0 0 * * 0
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -18,17 +20,12 @@ jobs:
     name: Bootstrap
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v7
-      - name: Place the checkout at the global mise configuration directory
+      - name: Install mise
         run: |
-          mv "$GITHUB_WORKSPACE" ~/.config/mise
-          mkdir -p "$GITHUB_WORKSPACE"
-      - uses: jdx/mise-action@v4
-        with:
-          bootstrap: true
-          bootstrap_args: --force-dotfiles
-          bootstrap_skip: user
-          log_level: ${{ runner.debug && 'debug' || 'info' }}
+          curl https://mise.run | sh
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+      - name: Adopt the setup repository
+        run: mise bootstrap --adopt bastiensun/setup --skip user --force-dotfiles
       - name: Completeness check
         run: |
           mise bootstrap packages status --missing
