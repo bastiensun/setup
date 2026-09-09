@@ -2,6 +2,7 @@ name: sun
 version: 1.0.0
 targets:
   - claude
+  - codex
 dependencies:
   apm:
     - git: mattpocock/skills

@@ -1,0 +1,60 @@
+[bootstrap.hooks.pre-packages]
+run = [
+  'command -v brew || NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"',
+  'test -d /Applications/AeroSpace.app || brew install --cask nikitabobko/tap/aerospace',
+  'test -d /Applications/Übersicht.app || brew install --cask ubersicht',
+]
+
+[bootstrap.packages]
+"brew:fish" = "latest"
+"brew:mole" = "latest"
+"brew-cask:claude" = "latest"
+"brew-cask:discord" = "latest"
+"brew-cask:docker-desktop" = "latest"
+"brew-cask:ghostty" = "latest"
+"brew-cask:grammarly-desktop" = "latest"
+"brew-cask:homerow" = "latest"
+"brew-cask:obsidian" = "latest"
+"brew-cask:raycast" = "latest"
+"brew-cask:signal" = "latest"
+"brew-cask:thebrowsercompany-dia" = "latest"
+"brew-cask:zed" = "latest"
+"brew-cask:zoom" = "latest"
+
+[bootstrap.repos]
+"~/Library/Application Support/Übersicht/widgets/simple-bar" = { url = "https://github.com/Jean-Tinland/simple-bar.git", ref = "master" }
+
+[dotfiles]
+"~/.config/fish/config.fish" = { source = "dotfiles/fish-config.fish" }
+"~/.config/ghostty/config" = { source = "dotfiles/ghostty.config" }
+"~/.apm/apm.yml" = { source = "dotfiles/apm-global.yml" }
+"~/.config/ponytail/config.json" = { source = "dotfiles/ponytail.json" }
+"~/.config/aerospace/aerospace.toml" = { source = "dotfiles/aerospace.toml" }
+"~/.config/zed/settings.json" = { source = "dotfiles/zed.json" }
+"~/.simplebarrc" = { source = "dotfiles/simple-bar.json", mode = "copy" }
+"~/.gitconfig" = { source = "dotfiles/gitconfig" }
+
+[bootstrap.macos.defaults]
+"com.apple.AppleMultitouchTrackpad" = { Clicking = 1 }
+"com.apple.dock" = { autohide = true, show-recents = false }
+"com.apple.finder" = { ShowPathbar = true }
+"NSGlobalDomain" = { _HIHideMenuBar = true, AppleShowAllExtensions = true }
+
+[bootstrap.hooks.post-defaults]
+run = "defaults -currentHost write com.apple.controlcenter BatteryShowPercentage -bool true"
+
+[bootstrap.user]
+login_shell = "/opt/homebrew/bin/fish"
+
+[tools]
+apm = "latest"
+gh = "latest"
+node = "lts"
+starship = "latest"
+tlrc = "latest"
+
+[tasks.bootstrap]
+run = [
+  'test -f ~/.ssh/id_ed25519 || ssh-keygen -t ed25519 -N "" -f ~/.ssh/id_ed25519',
+  'mise exec -- apm install --global',
+]
