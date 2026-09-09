@@ -17,10 +17,10 @@ run = [
 ]
 
 [bootstrap.packages]
-"brew:act" = "latest"
+act = "latest"
 "brew:fish" = "latest"
 "brew:mole" = "latest"
-"brew:starship" = "latest"
+starship = "latest"
 "brew:tldr" = "latest"
 "brew-cask:arc" = "latest"
 "brew-cask:brave-browser" = "latest"
