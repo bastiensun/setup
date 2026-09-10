@@ -28,7 +28,7 @@ jobs:
           curl https://mise.run | sh
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
       - name: Validate the bootstrap configuration
-        run: mise bootstrap --dry-run
+        run: mise bootstrap --dry-run --force-dotfiles
 
   bootstrap:
     name: Bootstrap
