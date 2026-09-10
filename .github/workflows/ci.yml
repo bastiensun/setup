@@ -13,16 +13,15 @@ concurrency:
 permissions:
   contents: read
 
+env:
+  MISE_CONFIG_DIR: ${{ github.workspace }}
+
 jobs:
   bootstrap:
     name: Bootstrap
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v7
-      - name: Place the checkout at the global mise configuration directory
-        run: |
-          mv "$GITHUB_WORKSPACE" ~/.config/mise
-          mkdir -p "$GITHUB_WORKSPACE"
       - uses: jdx/mise-action@v4
         with:
           bootstrap: true
