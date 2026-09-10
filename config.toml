@@ -26,6 +26,8 @@
 "~/.config/ponytail/config.json" = { source = "dotfiles/ponytail.json" }
 "~/.config/aerospace/aerospace.toml" = { source = "dotfiles/aerospace.toml" }
 "~/.config/zed/settings.json" = { source = "dotfiles/zed.json" }
+# simple-bar rewrites this file from its own interface. A symlink would send
+# those writes back into this repository, so the target is a plain copy.
 "~/.simplebarrc" = { source = "dotfiles/simple-bar.json", mode = "copy" }
 "~/.gitconfig" = { source = "dotfiles/gitconfig" }
 
