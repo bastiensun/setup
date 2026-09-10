@@ -44,11 +44,11 @@ tap_to_click = true
 [bootstrap.macos.defaults]
 "NSGlobalDomain" = { _HIHideMenuBar = true, AppleShowAllExtensions = true }
 
-[[bootstrap.macos.defaults_entries]]
-domain = "com.apple.controlcenter"
-key = "BatteryShowPercentage"
-host = "current"
-value = true
+# Host-scoped preferences are not supported in [bootstrap.macos.defaults] as of
+# mise 2026.9.4, so this one stays imperative. Move it into the table once
+# host-scoped entries reach a release.
+[bootstrap.hooks.post-defaults]
+run = "defaults -currentHost write com.apple.controlcenter BatteryShowPercentage -bool true"
 
 [bootstrap.user]
 login_shell = "/opt/homebrew/bin/fish"
