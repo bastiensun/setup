@@ -1,12 +1,18 @@
-# AeroSpace is a cask from a third-party tap that publishes no API metadata, so
-# mise falls back to evaluating its Ruby definition. That definition uses
-# postflight_steps, which the mise Cask DSL shim rejects as of 2026.9.4:
-#   unsupported cask metadata DSL `postflight_steps`
-# Homebrew installs it until mise can evaluate the definition itself.
+# Two casks that mise cannot install as of 2026.9.4, each for its own reason:
+#
+#   AeroSpace   its tap publishes no API metadata, so mise evaluates the Ruby
+#               definition itself, and the shim rejects it:
+#                 unsupported cask metadata DSL `postflight_steps`
+#   Ubersicht   the cask names its app artifact with a precomposed U+00DC, and
+#               mise does not find that name once the archive is unpacked:
+#                 brew-cask: app artifact 'Übersicht.app' was not found
+#
+# mise states that it will not proxy to the brew CLI, so Homebrew installs both.
 [bootstrap.hooks.pre-packages]
 run = [
   'command -v brew || NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"',
   'test -d /Applications/AeroSpace.app || brew install --cask nikitabobko/tap/aerospace',
+  'test -d /Applications/Übersicht.app || brew install --cask ubersicht',
 ]
 
 [bootstrap.packages]
@@ -22,7 +28,6 @@ run = [
 "brew-cask:raycast" = "latest"
 "brew-cask:signal" = "latest"
 "brew-cask:thebrowsercompany-dia" = "latest"
-"brew-cask:ubersicht" = "latest"
 "brew-cask:zed" = "latest"
 "brew-cask:zoom" = "latest"
 
