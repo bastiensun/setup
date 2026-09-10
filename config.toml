@@ -1,3 +1,13 @@
+# Two casks that mise cannot install as of 2026.9.4, each for its own reason:
+#
+#   AeroSpace   its tap publishes no API metadata, so mise evaluates the Ruby
+#               definition itself, and the shim rejects it:
+#                 unsupported cask metadata DSL `postflight_steps`
+#   Ubersicht   the cask names its app artifact with a precomposed U+00DC, and
+#               mise does not find that name once the archive is unpacked:
+#                 brew-cask: app artifact 'Übersicht.app' was not found
+#
+# mise states that it will not proxy to the brew CLI, so Homebrew installs both.
 [bootstrap.hooks.pre-packages]
 run = [
   'command -v brew || NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"',
@@ -31,15 +41,27 @@ run = [
 "~/.config/ponytail/config.json" = { source = "dotfiles/ponytail.json" }
 "~/.config/aerospace/aerospace.toml" = { source = "dotfiles/aerospace.toml" }
 "~/.config/zed/settings.json" = { source = "dotfiles/zed.json" }
+# simple-bar rewrites this file from its own interface. A symlink would send
+# those writes back into this repository, so the target is a plain copy.
 "~/.simplebarrc" = { source = "dotfiles/simple-bar.json", mode = "copy" }
 "~/.gitconfig" = { source = "dotfiles/gitconfig" }
 
+[bootstrap.macos.dock]
+autohide = true
+show_recents = false
+
+[bootstrap.macos.finder]
+show_pathbar = true
+
+[bootstrap.macos.trackpad]
+tap_to_click = true
+
 [bootstrap.macos.defaults]
-"com.apple.AppleMultitouchTrackpad" = { Clicking = 1 }
-"com.apple.dock" = { autohide = true, show-recents = false }
-"com.apple.finder" = { ShowPathbar = true }
 "NSGlobalDomain" = { _HIHideMenuBar = true, AppleShowAllExtensions = true }
 
+# Host-scoped preferences are not supported in [bootstrap.macos.defaults] as of
+# mise 2026.9.4, so this one stays imperative. Move it into the table once
+# host-scoped entries reach a release.
 [bootstrap.hooks.post-defaults]
 run = "defaults -currentHost write com.apple.controlcenter BatteryShowPercentage -bool true"
 

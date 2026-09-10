@@ -13,16 +13,28 @@ concurrency:
 permissions:
   contents: read
 
+env:
+  MISE_CONFIG_DIR: ${{ github.workspace }}
+  GITHUB_TOKEN: ${{ github.token }}
+
 jobs:
+  validate:
+    name: Validate
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Install mise
+        run: |
+          curl https://mise.run | sh
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+      - name: Validate the bootstrap configuration
+        run: mise bootstrap --dry-run --force-dotfiles
+
   bootstrap:
     name: Bootstrap
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v7
-      - name: Place the checkout at the global mise configuration directory
-        run: |
-          mv "$GITHUB_WORKSPACE" ~/.config/mise
-          mkdir -p "$GITHUB_WORKSPACE"
       - uses: jdx/mise-action@v4
         with:
           bootstrap: true
@@ -35,6 +47,8 @@ jobs:
           mise bootstrap repos status --missing
           mise bootstrap dotfiles status --missing
           mise bootstrap macos defaults status --missing
+      - name: Login shell check
+        run: mise bootstrap user status
       - name: Idempotence check
         run: |
           mise bootstrap --skip user
