@@ -1,10 +1,3 @@
-[bootstrap.hooks.pre-packages]
-run = [
-  'command -v brew || NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"',
-  'test -d /Applications/AeroSpace.app || brew install --cask nikitabobko/tap/aerospace',
-  'test -d /Applications/Übersicht.app || brew install --cask ubersicht',
-]
-
 [bootstrap.packages]
 "brew:fish" = "latest"
 "brew:mole" = "latest"
@@ -14,10 +7,12 @@ run = [
 "brew-cask:ghostty" = "latest"
 "brew-cask:grammarly-desktop" = "latest"
 "brew-cask:homerow" = "latest"
+"brew-cask:nikitabobko/tap/aerospace" = "latest"
 "brew-cask:obsidian" = "latest"
 "brew-cask:raycast" = "latest"
 "brew-cask:signal" = "latest"
 "brew-cask:thebrowsercompany-dia" = "latest"
+"brew-cask:ubersicht" = "latest"
 "brew-cask:zed" = "latest"
 "brew-cask:zoom" = "latest"
 
