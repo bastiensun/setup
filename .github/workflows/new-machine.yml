@@ -15,6 +15,9 @@ concurrency:
 permissions:
   contents: read
 
+env:
+  GITHUB_TOKEN: ${{ github.token }}
+
 jobs:
   bootstrap:
     name: Bootstrap

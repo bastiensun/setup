@@ -15,6 +15,7 @@ permissions:
 
 env:
   MISE_CONFIG_DIR: ${{ github.workspace }}
+  GITHUB_TOKEN: ${{ github.token }}
 
 jobs:
   validate:
