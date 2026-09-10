@@ -32,6 +32,8 @@ jobs:
           mise bootstrap repos status --missing
           mise bootstrap dotfiles status --missing
           mise bootstrap macos defaults status --missing
+      - name: Login shell check
+        run: mise bootstrap user status
       - name: Idempotence check
         run: |
           mise bootstrap --skip user
