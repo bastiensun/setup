@@ -35,8 +35,11 @@
 "com.apple.finder" = { ShowPathbar = true }
 "NSGlobalDomain" = { _HIHideMenuBar = true, AppleShowAllExtensions = true }
 
-[bootstrap.hooks.post-defaults]
-run = "defaults -currentHost write com.apple.controlcenter BatteryShowPercentage -bool true"
+[[bootstrap.macos.defaults_entries]]
+domain = "com.apple.controlcenter"
+key = "BatteryShowPercentage"
+host = "current"
+value = true
 
 [bootstrap.user]
 login_shell = "/opt/homebrew/bin/fish"
