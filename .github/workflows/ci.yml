@@ -17,6 +17,18 @@ env:
   MISE_CONFIG_DIR: ${{ github.workspace }}
 
 jobs:
+  validate:
+    name: Validate
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Install mise
+        run: |
+          curl https://mise.run | sh
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+      - name: Validate the bootstrap configuration
+        run: mise bootstrap --dry-run
+
   bootstrap:
     name: Bootstrap
     runs-on: macos-latest
