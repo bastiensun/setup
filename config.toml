@@ -29,10 +29,17 @@
 "~/.simplebarrc" = { source = "dotfiles/simple-bar.json", mode = "copy" }
 "~/.gitconfig" = { source = "dotfiles/gitconfig" }
 
+[bootstrap.macos.dock]
+autohide = true
+show_recents = false
+
+[bootstrap.macos.finder]
+show_pathbar = true
+
+[bootstrap.macos.trackpad]
+tap_to_click = true
+
 [bootstrap.macos.defaults]
-"com.apple.AppleMultitouchTrackpad" = { Clicking = 1 }
-"com.apple.dock" = { autohide = true, show-recents = false }
-"com.apple.finder" = { ShowPathbar = true }
 "NSGlobalDomain" = { _HIHideMenuBar = true, AppleShowAllExtensions = true }
 
 [[bootstrap.macos.defaults_entries]]
